@@ -3,171 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moja Strona</title>
+    <title>Kantor Wymiany - Kanga API</title>
     <style>
+        :root {
+            --bg-color: #0b0b0b;
+            --card-bg: #161616;
+            --text-primary: #e0e0e0;
+            --text-secondary: #777777;
+            --accent-orange: #ff6f00;
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-family);
             margin: 0;
-            padding: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header & Switch */
+        .header {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            min-height: 100vh;
-            background-color: #f5f5f5;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 20px;
         }
-        
-        .welcome-section {
-            text-align: center;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #fff;
+            text-transform: uppercase;
         }
-        
-        .welcome-header {
-            font-size: 2.5rem;
-            color: #333;
-            margin-bottom: 1rem;
+
+        .currency-switch {
+            display: flex;
+            background: #222;
+            border-radius: 4px;
+            padding: 2px;
         }
-        
-        .welcome-description {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        
-        .contact-button {
-            background-color: #007bff;
-            color: white;
+
+        .switch-btn {
+            padding: 8px 16px;
             border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            border-radius: 5px;
+            background: transparent;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+
+        .switch-btn.active {
+            background: #444;
+            color: #fff;
+        }
+
+        /* Table Styles */
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+
+        .market-table th {
+            text-align: right;
+            padding: 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 1px solid #222;
+            text-transform: uppercase;
+            font-size: 12px;
         }
         
-        .contact-button:hover {
-            background-color: #0056b3;
+        .market-table th:first-child, .market-table td:first-child {
+            text-align: left;
         }
-        
-        .rate-section {
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: #e9f7fe;
-            border-radius: 5px;
-            border-left: 4px solid #007bff;
+
+        .market-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #1a1a1a;
+            vertical-align: middle;
+            text-align: right;
         }
-        
-        .rate-section h2 {
-            margin-top: 0;
-            color: #333;
+
+        /* Token Info */
+        .token-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        
-        .rate-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #007bff;
+
+        .token-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #777;
         }
-        
-        .loading {
-            color: #666;
-            font-style: italic;
+
+        .token-name-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
-        
-        .error {
-            color: #d32f2f;
+
+        .token-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .token-symbol {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 4px;
+            background: #222;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Price */
+        .price {
+            font-weight: 600;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 17px;
+            color: #fff;
+        }
+
+        /* Action Button */
+        .action-btn {
+            background-color: transparent;
+            color: var(--accent-orange);
+            border: 1px solid #663c00;
+            padding: 10px 25px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .action-btn:hover {
+            background-color: var(--accent-orange);
+            border-color: var(--accent-orange);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 111, 0, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .token-name { display: none; }
+            .token-symbol { font-size: 14px; margin: 0; padding: 0; background: none; color: #fff; font-weight: bold; }
         }
     </style>
 </head>
 <body>
-    <section class="welcome-section">
-        <h1 class="welcome-header">Witaj na naszej stronie!</h1>
-        <p class="welcome-description">Jesteśmy zespołem pasjonatów tworzących innowacyjne rozwiązania cyfrowe. Poznaj nas i nasze projekty.</p>
-        <button class="contact-button">Kontakt</button>
-        
-        <div class="rate-section">
-            <h2>Aktualny kurs BTC</h2>
-            <div id="btc-price" class="loading">Ładowanie kursu BTC...</div>
-        </div>
-        
-        <div class="rate-section">
-            <h2>Kurs USD/PLN</h2>
-            <div id="usd-pln-rate" class="loading">Ładowanie kursu USD/PLN...</div>
-        </div>
-    </section>
 
-    <script>
-        // Fetch BTC to USD rate from CoinGecko API
-        async function fetchBTCRate() {
-            const btcPriceElement = document.getElementById('btc-price');
+<div class="container">
+    <div class="header">
+        <h1>Kantor Wymiany</h1>
+        <div class="currency-switch">
+            <button class="switch-btn active" onclick="setCurrency('PLN')">PLN</button>
+            <button class="switch-btn" onclick="setCurrency('USD')">USD</button>
+        </div>
+    </div>
+
+    <table class="market-table">
+        <thead>
+            <tr>
+                <th>Nazwa tokena</th>
+                <th>Aktualny Kurs</th>
+                <th>Akcja</th>
+            </tr>
+        </thead>
+        <tbody id="market-data">
+            <tr>
+                <td colspan="3" style="text-align: center; color: #555; padding: 40px;">
+                    Ładowanie kursów...
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Lista TOP 10 wg CoinMarketCap (BTC, ETH, USDT, BNB, XRP, USDC, SOL, TRX, DOGE, ADA)
+    const tokens = [
+        { symbol: 'BTC', name: 'Bitcoin', icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025' },
+        { symbol: 'ETH', name: 'Ethereum', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=025' },
+        { symbol: 'USDT', name: 'Tether', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png?v=025' },
+        { symbol: 'BNB', name: 'BNB', icon: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=025' },
+        { symbol: 'XRP', name: 'XRP', icon: 'https://cryptologos.cc/logos/xrp-xrp-logo.png?v=025' },
+        { symbol: 'USDC', name: 'USDC', icon: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=025' },
+        { symbol: 'SOL', name: 'Solana', icon: 'https://cryptologos.cc/logos/solana-sol-logo.png?v=025' },
+        { symbol: 'TRX', name: 'TRON', icon: 'https://cryptologos.cc/logos/tron-trx-logo.png?v=025' },
+        { symbol: 'DOGE', name: 'Dogecoin', icon: 'https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=025' },
+        { symbol: 'ADA', name: 'Cardano', icon: 'https://cryptologos.cc/logos/cardano-ada-logo.png?v=025' }
+    ];
+
+    let currentCurrency = 'PLN';
+    let marketDataCache = {};
+
+    async function fetchMarketData() {
+        try {
+            const targetUrl = 'https://api.kanga.exchange/api/v2/market/ticker';
+            const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
             
-            try {
-                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-                
-                if (!response.ok) {
-                    throw new Error('Nie udało się pobrać kursu BTC');
-                }
-                
-                const data = await response.json();
-                const btcRate = data.bitcoin.usd;
-                
-                // Format the price with commas for thousands
-                const formattedPrice = new Intl.NumberFormat('pl-PL', {
-                    style: 'currency',
-                    currency: 'USD',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(btcRate);
-                
-                btcPriceElement.innerHTML = `<span class="rate-value">${formattedPrice}</span> za 1 BTC`;
-                btcPriceElement.classList.remove('loading', 'error');
-            } catch (error) {
-                console.error('Error fetching BTC rate:', error);
-                btcPriceElement.textContent = 'Błąd ładowania kursu BTC';
-                btcPriceElement.classList.remove('loading');
-                btcPriceElement.classList.add('error');
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error(`Status: ${response.status}`);
+
+            const textData = await response.text();
+            marketDataCache = JSON.parse(textData);
+
+            renderTable();
+
+        } catch (error) {
+            console.error("Błąd API:", error);
+            if(Object.keys(marketDataCache).length === 0) {
+                 document.getElementById('market-data').innerHTML = `
+                    <tr><td colspan="3" style="text-align:center; padding: 30px; color: #ff3d00;">
+                    Błąd pobierania danych z Kangi.
+                    </td></tr>`;
             }
         }
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('market-data');
+        if (Object.keys(marketDataCache).length === 0) return;
         
-        // Fetch USD to PLN rate from exchangerate-api.com
-        async function fetchUSDRate() {
-            const usdRateElement = document.getElementById('usd-pln-rate');
+        tbody.innerHTML = '';
+
+        tokens.forEach(token => {
+            let marketPair = '';
             
-            try {
-                const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-                
-                if (!response.ok) {
-                    throw new Error('Nie udało się pobrać kursu USD');
-                }
-                
-                const data = await response.json();
-                const usdRate = data.rates.PLN;
-                
-                // Format the rate
-                const formattedRate = new Intl.NumberFormat('pl-PL', {
-                    style: 'decimal',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 4
-                }).format(usdRate);
-                
-                usdRateElement.innerHTML = `<span class="rate-value">${formattedRate}</span> PLN za 1 USD`;
-                usdRateElement.classList.remove('loading', 'error');
-            } catch (error) {
-                console.error('Error fetching USD rate:', error);
-                usdRateElement.textContent = 'Błąd ładowania kursu USD';
-                usdRateElement.classList.remove('loading');
-                usdRateElement.classList.add('error');
+            if (currentCurrency === 'PLN') {
+                marketPair = `${token.symbol}-PLN`;
+            } else {
+                marketPair = `${token.symbol}-USDT`;
+                // Wyjątki dla stablecoinów przy widoku USD
+                if (token.symbol === 'USDT' || token.symbol === 'USDC') marketPair = 'USDC-USDT';
             }
-        }
-        
-        // Fetch all rates when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchBTCRate();
-            fetchUSDRate();
+
+            // Sprawdzamy czy para istnieje w danych
+            let data = marketDataCache[marketPair];
+            
+            // Jeśli nie ma pary PL (np. TRX-PLN może być mało płynne), spróbujmy USDT i przeliczyć? 
+            // W prostym widoku, jeśli brak danych, pomijamy wiersz lub pokazujemy placeholder.
+            // Tutaj: jeśli brak danych, wiersz się nie wygeneruje.
+            if (!data) return;
+
+            const price = parseFloat(data.last_price || 0);
+
+            // Formatowanie ceny
+            let formattedPrice = price;
+            if (price < 1) formattedPrice = price.toFixed(6);
+            else if (price < 100) formattedPrice = price.toFixed(2);
+            else formattedPrice = price.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <div class="token-info">
+                        <img src="${token.icon}" class="token-icon" alt="${token.symbol}">
+                        <div class="token-name-wrap">
+                            <span class="token-name">${token.name}</span>
+                            <span class="token-symbol">${token.symbol}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="price">${currentCurrency === 'USD' ? '$' : ''} ${formattedPrice} ${currentCurrency === 'PLN' ? 'PLN' : ''}</td>
+                <td>
+                    <a href="#" class="action-btn" onclick="openExchangeModal('${token.symbol}', '${currentCurrency}')">WYMIANA</a>
+                </td>
+            `;
+            tbody.appendChild(row);
         });
-    </script>
+    }
+
+    function setCurrency(currency) {
+        currentCurrency = currency;
+        document.querySelectorAll('.switch-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText === currency);
+        });
+        renderTable();
+    }
+
+    function openExchangeModal(symbol, currency) {
+        if(confirm(`Wymiana ${symbol} (${currency})\n\nKupujesz czy Sprzedajesz?`)) {
+            // Logika przekierowania
+        }
+    }
+
+    fetchMarketData();
+    setInterval(fetchMarketData, 15000); 
+</script>
+
 </body>
 </html>
