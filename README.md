@@ -1,2 +1,2 @@
-# my-project
-My project AI Agent
+# Krypto Kotek
+Certyfikowany Punkt Partnerski sieci Kanga Exchange
